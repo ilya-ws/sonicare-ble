@@ -33,6 +33,7 @@ from .const import (
     NOT_BRUSHING_UPDATE_INTERVAL_SECONDS,
     TIMEOUT_RECENTLY_BRUSHING,
     BRUSHING_UPDATE_INTERVAL_SECONDS,
+    SONICARE_ADVERTISMENT_UUID,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -103,20 +104,23 @@ class SonicareBluetoothDeviceData(BluetoothData):
         """Update from BLE advertisement data."""
         _LOGGER.debug("Parsing Sonicare BLE advertisement data: %s", service_info)
         manufacturer_data = service_info.manufacturer_data
+        service_uuids = service_info.service_uuids
         address = service_info.address
         _LOGGER.debug(
             "Parsing Sonicare BLE advertisement manufacturer data: %s",
             manufacturer_data,
         )
-        if SONICARE_MANUFACTURER not in manufacturer_data:
+        if (
+            SONICARE_ADVERTISMENT_UUID not in service_uuids
+        ):
             return None
-        data = manufacturer_data[SONICARE_MANUFACTURER]
-        self.set_device_manufacturer("Philips Sonicare")
-        _LOGGER.debug("Parsing Sonicare sensor: %s", data)
-        msg_length = len(data)
-        _LOGGER.debug("Message length: %s", msg_length)
-        if msg_length not in (9, 999):
-            return
+        #data = manufacturer_data[SONICARE_MANUFACTURER]
+        #self.set_device_manufacturer("Philips Sonicare")
+        #_LOGGER.debug("Parsing Sonicare sensor: %s", data)
+        #msg_length = len(data)
+        #_LOGGER.debug("Message length: %s", msg_length)
+        #if msg_length not in (9, 999):
+        #    return
 
         # model = BYTES_TO_MODEL.get(device_bytes, Models.HX6340)
         model = Models.HX6340
